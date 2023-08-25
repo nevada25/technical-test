@@ -1,0 +1,16 @@
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: msvc-payments
+          uri: lb://msvc-payments
+          predicates:
+            - Path=/api/payments/**
+          filters:
+            - StripPrefix=2
+        - id: msvc-balances
+          uri: lb://msvc-balances
+          predicates:
+            - Path=/api/balances/**
+          filters:
+            - StripPrefix=2

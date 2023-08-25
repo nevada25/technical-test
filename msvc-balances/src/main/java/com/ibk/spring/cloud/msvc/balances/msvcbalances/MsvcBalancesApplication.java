@@ -2,7 +2,9 @@ package com.ibk.spring.cloud.msvc.balances.msvcbalances;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 
+@EnableFeignClients
 @SpringBootApplication
 public class MsvcBalancesApplication {
 

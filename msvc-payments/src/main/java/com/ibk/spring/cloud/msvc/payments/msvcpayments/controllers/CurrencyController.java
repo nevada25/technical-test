@@ -19,52 +19,52 @@ public class CurrencyController {
     @Autowired
     private CurrencyService currencyService;
     @GetMapping
-    public ResponseEntity<ApiResponseUser> listAll() {
-        List<Currency> currencies = this.currencyService.findAllCurrency();
-        ApiResponseUser response = new ApiResponseUser().builder()
-                .success(true)
-                .message("Los datos de la moneda se estan listando correctamente")
-                .status(HttpStatus.OK)
-                .data(currencies)
-                .build();
-        return ResponseEntity.ok(response);
-    }
-
-
-    @PostMapping
-    public ResponseEntity<?> saveCurrency(@Valid @RequestBody Currency currency, BindingResult result) {
-        if (result.hasErrors()) {
-            return valid_data(result);
+        public ResponseEntity<ApiResponseUser> listAll() {
+            List<Currency> currencies = this.currencyService.findAllCurrency();
+            ApiResponseUser response = new ApiResponseUser().builder()
+                    .success(true)
+                    .message("Los datos de la moneda se estan listando correctamente")
+                    .status(HttpStatus.OK)
+                    .data(currencies)
+                    .build();
+            return ResponseEntity.ok(response);
         }
 
-        Currency currencyRequest = currencyService.saveCurrency(currency);
 
-        ApiResponseUser response = new ApiResponseUser().builder()
-                .success(true)
-                .message("La moneda se ha creado correctamente")
-                .status(HttpStatus.OK)
-                .data(currencyRequest)
-                .build();
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
-    }
+        @PostMapping
+        public ResponseEntity<?> saveCurrency(@Valid @RequestBody Currency currency, BindingResult result) {
+            if (result.hasErrors()) {
+                return valid_data(result);
+            }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteCurrency(@PathVariable Long id) {
-        Optional<Currency> o = currencyService.findById(id);
-        if (o.isPresent()) {
-            currencyService.deleteCurrency(id);
-            return ResponseEntity.noContent().build();
+            Currency currencyRequest = currencyService.saveCurrency(currency);
+
+            ApiResponseUser response = new ApiResponseUser().builder()
+                    .success(true)
+                    .message("La moneda se ha creado correctamente")
+                    .status(HttpStatus.OK)
+                    .data(currencyRequest)
+                    .build();
+            return ResponseEntity.status(HttpStatus.CREATED).body(response);
         }
-        return ResponseEntity.notFound().build();
-    }
+
+        @DeleteMapping("/{id}")
+        public ResponseEntity<?> deleteCurrency(@PathVariable Long id) {
+            Optional<Currency> o = currencyService.findById(id);
+            if (o.isPresent()) {
+                currencyService.deleteCurrency(id);
+                return ResponseEntity.noContent().build();
+            }
+            return ResponseEntity.notFound().build();
+        }
 
 
 
-    private ResponseEntity<Map<String, String>> valid_data(BindingResult result) {
-        Map<String, String> errs = new HashMap<>();
-        result.getFieldErrors().forEach(err -> {
-            errs.put(err.getField(), "El campo " + err.getField() + " " + err.getDefaultMessage());
-        });
-        return ResponseEntity.badRequest().body(errs);
+        private ResponseEntity<Map<String, String>> valid_data(BindingResult result) {
+            Map<String, String> errs = new HashMap<>();
+            result.getFieldErrors().forEach(err -> {
+                errs.put(err.getField(), "El campo " + err.getField() + " " + err.getDefaultMessage());
+            });
+            return ResponseEntity.badRequest().body(errs);
     }
 }

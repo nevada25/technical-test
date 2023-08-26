@@ -1,6 +1,9 @@
 package com.ibk.spring.cloud.msvc.balances.msvcbalances.models.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import org.hibernate.annotations.ColumnDefault;
+import org.springframework.boot.context.properties.bind.DefaultValue;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -14,18 +17,23 @@ public class Balance {
     private Long id;
 
     @Column(name = "id_client")
+    @NotNull
     private Long id_client;
 
     @ManyToOne
     @JoinColumn(name = "id_client", insertable = false, updatable = false)
+    @NotNull
     private Client client;
 
     @OneToMany(mappedBy = "balance")
     private List<BalanceDetail> balance_details;
 
 
+    @NotNull
     private BigDecimal  full_payment;
-    private BigDecimal  accumulated_payment;
+
+
+    private BigDecimal  accumulated_payment=new BigDecimal(0);
 
 
     public List<BalanceDetail> getBalance_details() {

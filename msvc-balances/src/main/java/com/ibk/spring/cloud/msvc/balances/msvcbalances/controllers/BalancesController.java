@@ -1,9 +1,9 @@
 package com.ibk.spring.cloud.msvc.balances.msvcbalances.controllers;
 
-
-import com.ibk.spring.cloud.msvc.balances.msvcbalances.models.entity.Client;
+import com.ibk.spring.cloud.msvc.balances.msvcbalances.models.entity.Balance;
+import com.ibk.spring.cloud.msvc.balances.msvcbalances.models.entity.Balance;
 import com.ibk.spring.cloud.msvc.balances.msvcbalances.response.ApiResponseUser;
-import com.ibk.spring.cloud.msvc.balances.msvcbalances.services.ClientService;
+import com.ibk.spring.cloud.msvc.balances.msvcbalances.services.BalanceService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,18 +17,18 @@ import java.util.Map;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/balances/client")
-public class ClientController {
-
+@RequestMapping("/api/balances/balance")
+public class BalancesController {
     @Autowired
-    private ClientService clientService;
+    private BalanceService balanceService;
+
 
     @GetMapping
     public ResponseEntity<ApiResponseUser> listAll() {
-        List<Client> currencies = this.clientService.findAllClient();
+        List<Balance> currencies = balanceService.findAllBalance();
         ApiResponseUser response = new ApiResponseUser().builder()
                 .success(true)
-                .message("Los datos de los clientes se estan listando correctamente")
+                .message("Los datos del balance se estan listando correctamente")
                 .status(HttpStatus.OK)
                 .data(currencies)
                 .build();
@@ -36,28 +36,29 @@ public class ClientController {
     }
 
 
+
     @PostMapping
-    public ResponseEntity<?> saveClient(@Valid @RequestBody Client client, BindingResult result) {
+    public ResponseEntity<?> saveBalance(@Valid @RequestBody Balance balance, BindingResult result) {
         if (result.hasErrors()) {
             return valid_data(result);
         }
 
-        Client clientRequest = clientService.saveClient(client);
+        Balance balanceRequest = balanceService.saveBalance(balance);
 
         ApiResponseUser response = new ApiResponseUser().builder()
                 .success(true)
-                .message("El cliente se ha creado correctamente")
+                .message("El balancee se ha creado correctamente")
                 .status(HttpStatus.OK)
-                .data(clientRequest)
+                .data(balanceRequest)
                 .build();
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteClient(@PathVariable Long id) {
-        Optional<Client> o = clientService.findById(id);
+    public ResponseEntity<?> deleteBalance(@PathVariable Long id) {
+        Optional<Balance> o = balanceService.findById(id);
         if (o.isPresent()) {
-            clientService.deleteClient(id);
+            balanceService.deleteBalance(id);
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.notFound().build();
@@ -72,5 +73,5 @@ public class ClientController {
         });
         return ResponseEntity.badRequest().body(errs);
     }
-    
+
 }
